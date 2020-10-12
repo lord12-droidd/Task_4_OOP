@@ -1,40 +1,192 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Text;
 using System.IO;
-using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
-namespace _3
+namespace Task_5
 {
+
+    class Coord
+    {
+        private double x;
+        private double y;
+        public double XCoord
+        {
+            get
+            {
+                return x;
+            }
+            set
+            {
+                x = value;
+            }
+        }
+
+        public double YCoord
+        {
+            get
+            {
+                return y;
+            }
+            set
+            {
+                y = value;
+            }
+        }
+    }
+    class Sides
+    {
+        private double lenght;
+
+        public double Side
+        {
+            get
+            {
+                return lenght;
+            }
+            set
+            {
+                lenght = value;
+            }
+        }
+    }
+
     class Program
     {
-
-        private static double Side(double x1, double y1, double x2, double y2)
+        static string choice;
+        private static double TriangleSide(double x1, double y1, double x2, double y2)
         {
             double side = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
             return Math.Abs(side);
         }
 
-        private static double Area(double side1, double side2, double side3)
+        private static void OutFile()
         {
-            double p = (side1 + side2 + side3) / 2;
-            return Math.Sqrt(p * (p - side1) * (p - side2) * (p - side3));
+
+            using (var sr = new StreamReader("test.txt"))
+            {
+                for (int z = 0; z < 3; z++)
+                {
+                    Console.WriteLine($"Координати точки {z + 1}: ");
+                    var text_x = sr.ReadLine();
+                    Console.Write($"x{z + 1}: ");
+                    Console.WriteLine(text_x);
+                    var text_y = sr.ReadLine();
+                    Console.Write($"y{z + 1}: ");
+                    Console.WriteLine(text_y);
+                }
+                if (choice == "0")
+                {
+                    sr.Close();
+                    File.WriteAllText("test.txt", String.Empty);
+                }
+
+            }
+
         }
 
-        private static double Perimeter(double side1, double side2, double side3)
+        private static double InFile(double coord)
         {
-            return side1 + side2 + side3; 
+            using (var sw = new StreamWriter("test.txt", true))
+            {
+
+                sw.WriteLine($"{coord}");
+                sw.Close();
+                return 0;
+            }
         }
 
-        private static double Сircumscribed(double side1, double side2, double side3)
+        public static double OutputingX(double x)
         {
-            
-            return (side1*side2*side3) / (4 * Area(side1, side2, side3));
+            while (true)
+            {
+                try
+                {
+                    if (choice == "0")
+                    {
+                        Console.WriteLine($"Введіть x = ");
+                        x = Convert.ToDouble(Console.ReadLine());
+                        InFile(x);
+                        break;
+                    }
+                    else if (choice == "1")
+                    {
+                        using (var sr = new StreamReader("test.txt"))
+                        {
+                            x = Convert.ToDouble(sr.ReadLine());
+                            sr.Close();
+                            InFile(x);
+                            sr.Close();
+                            Delete();
+                            sr.Close();
+                            break;
+                        }
+                    }
+
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Ви ввели некоректне значення!");
+                    if (choice == "1")
+                    {
+                        Console.ReadKey();
+                        Environment.Exit(0);
+                    }
+                }
+            }
+            return x;
         }
 
-        private static double Inscribed(double side1, double side2, double side3)
+        public static double OutputingY(double y)
         {
-            return Area(side1, side2, side3) / (Perimeter(side1, side2, side3) / 2);
+            while (true)
+            {
+                try
+                {
+                    if (choice == "0")
+                    {
+                        Console.WriteLine($"Введіть y = ");
+                        y = Convert.ToDouble(Console.ReadLine());
+                        InFile(y);
+                        break;
+                    }
+                    else if (choice == "1")
+                    {
+                        using (var sr = new StreamReader("test.txt"))
+                        {
+                            y = Convert.ToDouble(sr.ReadLine());
+                            sr.Close();
+                            InFile(y);
+                            sr.Close();
+                            Delete();
+                            sr.Close();
+                            break;
+                        }
+                    }
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Ви ввели некоректне значення!");
+
+                    if (choice == "1")
+                    {
+                        Console.ReadKey();
+                        Environment.Exit(0);
+                    }
+
+                }
+            }
+            return y;
         }
-        
+
+        public static void Delete()
+        {
+            var lines = File.ReadAllLines("test.txt");
+            File.WriteAllLines("test.txt", lines.Skip(1).ToArray());
+        }
 
         private static double Existing(double side1, double side2, double side3)
         {
@@ -48,178 +200,119 @@ namespace _3
             }
         }
 
-        private static double InFile(double coord)
+        private static double Area(double side1, double side2, double side3)
         {
-            using (var sw = new StreamWriter("test.txt",true))
-            {
-
-                sw.WriteLine($"{coord}");
-                return 0;
-            }
+            double p = (side1 + side2 + side3) / 2;
+            return Math.Sqrt(p * (p - side1) * (p - side2) * (p - side3));
         }
 
-
-
-        private static void OutFile()
+        private static double Perimeter(double side1, double side2, double side3)
         {
-            using (var sr = new StreamReader("test.txt"))
-            {
-                for (int z = 0; z < 3; z++)
-                {
-                    Console.WriteLine($"Координати точки {z+1}: ");
-                    var text_x = sr.ReadLine();
-                    Console.Write($"x{z + 1}: ");
-                    Console.WriteLine(text_x);
-                    var text_y = sr.ReadLine();
-                    Console.Write($"y{z + 1}: ");
-                    Console.WriteLine(text_y);
-                }
+            return side1 + side2 + side3;
+        }
 
-                
+        private static double Сircumscribed(double side1, double side2, double side3)
+        {
+
+            return (side1 * side2 * side3) / (4 * Area(side1, side2, side3));
+        }
+
+        private static double Inscribed(double side1, double side2, double side3)
+        {
+            return Area(side1, side2, side3) / (Perimeter(side1, side2, side3) / 2);
+        }
+        private static void ChoiceControl()
+        {
+            Console.WriteLine($"Введення з файлу чи з клавіатури?\n0 - з клавіатури  1 - з файлу: ");
+            while (true)
+            {
+                choice = Console.ReadLine();
+                if (choice == "0" ^ choice == "1")
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Будь ласка оберіть один із режимів роботи");
+                }
             }
+
         }
 
         static void Main(string[] args)
         {
-
-            double x_a;
-            double y_a;
-            double x_b;
-            double y_b;
-            double x_c;
-            double y_c;
-
-
-
-            double[] Sides = new double[3];
-
-            Console.OutputEncoding = System.Text.Encoding.Unicode;
-
-
-            while (true)
+            Console.OutputEncoding = Encoding.Unicode;
+            Console.InputEncoding = Encoding.Unicode;
+            ChoiceControl();
+            if (choice == "0")
             {
-                try
+                Coord dot1 = new Coord();
+                Console.WriteLine($"Введіть координати 1 точки: ");
+                dot1.XCoord = OutputingX(dot1.XCoord);
+                dot1.YCoord = OutputingY(dot1.YCoord);
+                Coord dot2 = new Coord();
+                Console.WriteLine($"Введіть координати 2 точки: ");
+                dot2.XCoord = OutputingX(dot2.XCoord);
+                dot2.YCoord = OutputingY(dot2.YCoord);
+                Coord dot3 = new Coord();
+                Console.WriteLine($"Введіть координати 3 точки: ");
+                dot3.XCoord = OutputingX(dot3.XCoord);
+                dot3.YCoord = OutputingY(dot3.YCoord);
+                Sides side1 = new Sides();
+                side1.Side = TriangleSide(dot1.XCoord, dot1.YCoord, dot2.XCoord, dot2.YCoord);
+                Sides side2 = new Sides();
+                side2.Side = TriangleSide(dot1.XCoord, dot1.YCoord, dot3.XCoord, dot3.YCoord);
+                Sides side3 = new Sides();
+                side3.Side = TriangleSide(dot2.XCoord, dot2.YCoord, dot3.XCoord, dot3.YCoord);
+                if (Existing(side1.Side, side2.Side, side3.Side) == 0)
                 {
-                    Console.WriteLine($"Введіть x1 = ");
-                    x_a = Convert.ToDouble(Console.ReadLine());
-                        
-                    InFile(x_a);
-                    break;
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Ви ввели некоректне значення!");
-                }
-            }
-            while (true)
-            {
-                try
-                {
-                    Console.WriteLine($"Введіть y1 = ");
-                    y_a = Convert.ToDouble(Console.ReadLine());
-                    InFile(y_a);
-                    break;
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Ви ввели некоректне значення!");
-                }
-            }
-            while (true)
-            {
-                try
-                {
-                    Console.WriteLine($"Введіть x2 = ");
-                    x_b = Convert.ToDouble(Console.ReadLine());
-                    InFile(x_b);
-                    break;
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Ви ввели некоректне значення!");
-                }
-            }
-            while (true)
-            {
-                try
-                {
-                    Console.WriteLine($"Введіть y2 = ");
-                    y_b = Convert.ToDouble(Console.ReadLine());
-                    InFile(y_b);
-                    break;
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Ви ввели некоректне значення!");
-                }
-            }
-            while (true)
-            {
-                try
-                {
-                    Console.WriteLine($"Введіть x3 = ");
-                    x_c = Convert.ToDouble(Console.ReadLine());
-                    InFile(x_c);
-                    break;
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Ви ввели некоректне значення!");
-                }
-            }
-            while (true)
-            {
-                try
-                {
-                    Console.WriteLine($"Введіть y3 = ");
-                    y_c = Convert.ToDouble(Console.ReadLine());
-                    InFile(y_c);
-                    break;
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Ви ввели некоректне значення!");
-                }
-            }
-            for (int i = 0; i < 3; i++)
-            {
-                
-                if (i == 0)
-                {
-                    double side1 = Side(x_a, y_a, x_b, y_b);
-                    Sides[i] = side1;
-                    Console.WriteLine($"Сторона 1 = {side1} (од.вим.)");
-                }
-                else if (i == 1)
-                {
-                    double side2 = Side(x_a, y_a, x_c, y_c);
-                    Sides[i] = side2;
-                    Console.WriteLine($"Сторона 2 = {side2} (од.вим.)");
+                    Console.WriteLine("Такого трикутника не існує");
                 }
                 else
                 {
-                    double side3 = Side(x_c, y_c, x_b, y_b);
-                    Sides[i] = side3;
-                    Console.WriteLine($"Сторона 3 = {side3} (од.вим.)");
+                    OutFile();
+                    Console.WriteLine("Периметр трикутника = {0} (од.вим.)", Perimeter(side1.Side, side2.Side, side3.Side));
+                    Console.WriteLine("Площа трикутника = {0} (кв.од.)", Area(side1.Side, side2.Side, side3.Side));
+                    Console.WriteLine("Радіус описаного кола = {0} (од.вим.)", Сircumscribed(side1.Side, side2.Side, side3.Side));
+                    Console.WriteLine("Радіус вписаного кола = {0} (од.вим.)", Inscribed(side1.Side, side2.Side, side3.Side));
 
-                    if (Existing(Sides[0], Sides[1], Sides[2]) == 0)
-                    {
-                        Console.WriteLine("Такого трикутника не існує");
-                    }
-                    else
-                    {
-                        OutFile();
-                        Console.WriteLine("Периметр трикутника = {0} (од.вим.)", Perimeter(Sides[0], Sides[1], Sides[2]));
-                        Console.WriteLine("Площа трикутника = {0} (кв.од.)", Area(Sides[0], Sides[1], Sides[2]));
-                        Console.WriteLine("Радіус описаного кола = {0} (од.вим.)", Сircumscribed(Sides[0], Sides[1], Sides[2]));
-                        Console.WriteLine("Радіус вписаного кола = {0} (од.вим.)", Inscribed(Sides[0], Sides[1], Sides[2]));
-                    }
                 }
+                Console.ReadKey();
             }
-        Console.ReadKey();
+            else if (choice == "1")
+            {
+                Coord dot1 = new Coord();
+                dot1.XCoord = OutputingX(dot1.XCoord);
+                dot1.YCoord = OutputingY(dot1.YCoord);
+                Coord dot2 = new Coord();
+                dot2.XCoord = OutputingX(dot2.XCoord);
+                dot2.YCoord = OutputingY(dot2.YCoord);
+                Coord dot3 = new Coord();
+                dot3.XCoord = OutputingX(dot3.XCoord);
+                dot3.YCoord = OutputingY(dot3.YCoord);
+                Sides side1 = new Sides();
+                side1.Side = TriangleSide(dot1.XCoord, dot1.YCoord, dot2.XCoord, dot2.YCoord);
+                Sides side2 = new Sides();
+                side2.Side = TriangleSide(dot1.XCoord, dot1.YCoord, dot3.XCoord, dot3.YCoord);
+                Sides side3 = new Sides();
+                side3.Side = TriangleSide(dot2.XCoord, dot2.YCoord, dot3.XCoord, dot3.YCoord);
+                if (Existing(side1.Side, side2.Side, side3.Side) == 0)
+                {
+                    Console.WriteLine("Такого трикутника не існує");
+                }
+                else
+                {
+                    OutFile();
+                    Console.WriteLine("Периметр трикутника = {0} (од.вим.)", Perimeter(side1.Side, side2.Side, side3.Side));
+                    Console.WriteLine("Площа трикутника = {0} (кв.од.)", Area(side1.Side, side2.Side, side3.Side));
+                    Console.WriteLine("Радіус описаного кола = {0} (од.вим.)", Сircumscribed(side1.Side, side2.Side, side3.Side));
+                    Console.WriteLine("Радіус вписаного кола = {0} (од.вим.)", Inscribed(side1.Side, side2.Side, side3.Side));
+
+                }
+                Console.ReadKey();
+            }
+
         }
-        
+
     }
 }
-
-
