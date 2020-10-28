@@ -114,6 +114,8 @@ namespace Task_4
                     }
                     else if (choice == "1")
                     {
+                        var lines = File.ReadAllLines("test.txt").Where(arg => !string.IsNullOrWhiteSpace(arg));
+                        File.WriteAllLines("test.txt", lines);
                         using (var sr = new StreamReader("test.txt"))
                         {
                             x = Convert.ToDouble(sr.ReadLine());
@@ -155,6 +157,8 @@ namespace Task_4
                     }
                     else if (choice == "1")
                     {
+                        var lines = File.ReadAllLines("test.txt").Where(arg => !string.IsNullOrWhiteSpace(arg));
+                        File.WriteAllLines("test.txt", lines);
                         using (var sr = new StreamReader("test.txt"))
                         {
                             y = Convert.ToDouble(sr.ReadLine());
